@@ -1,0 +1,42 @@
+Structure
+struct contentofRS : 每個RS中的內容
+struct inst : 每個instuction的內容
+struct buffer : 每個buffer內容
+
+全域變數
+vector<inst> instruction : 存放每個instruction，大小為input.txt總行數。
+int RF[6] = { 0,0,2,4,6,8 } : 用來放RF的值，其中RF[0]不會用到。
+string RAT[6] : 用來放RAT的值，其中RAT[0]不會用到。
+contentofRS RS[6] : 用來放RS的值，其中RS[0]不會用到。
+int cycle : 紀錄目前進行到的Cycle編號，初始值為1。
+bool changedCycle : 記錄這個Cycle是否有變化。
+int C_ADDandSUB, C_MUL, C_DIV : 讓使用者輸入四種type的ALU Cycle time
+buffer bufferADD : 用來放ADD machine Buffer的值。
+buffer bufferMUL : 用來放MUL machine Buffer的值。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+void input():
+	輸入txt檔，並將內容分割好，存放在vector:instruction當中。
+
+void Issue():
+	當instruction的數量不為0且ADD或是MUL RS還有空位時，就做Issue，做完後會將Issue的instruction移除掉。
+
+void Dispatch():
+	將數值都準備好的RS放入Buffer，並計算其所需的ALU時間。
+
+void WriteResult(buffer& thisbuffer):
+	當前的Cycle若為buffer ALU做完的時間，就將計算的結果血回去RS、RAT和RF中，並free掉RS。
+
+void printCycleStatus():
+	若cycle有變化，就print出此cycle的RF、RAT、兩個machine的RS及Buffer。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+main function:
+首先先進行讀檔input()，
+並讓使用者輸入ALU的Cycle Time。
+接下來進入迴圈，終止條件為vector:instruction及RS內皆為空，
+接著先去看有沒有ALU做完，需要write result，
+然後做Dispatch()，看有沒有數值都準備好的RS，若buffer為空就放入buffer。
+當instruction的數量不為0且ADD或是MUL RS還有空位時，就做Issue()，做完後會將Issue的instruction移除掉，
+最後去判斷此Cycle有沒有變化、需不需要輸出，
+再將Cycle數++，進入下一回合。
